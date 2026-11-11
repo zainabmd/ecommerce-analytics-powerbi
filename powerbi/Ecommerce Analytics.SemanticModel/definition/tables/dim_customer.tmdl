@@ -1,0 +1,212 @@
+table dim_customer
+	lineageTag: 359e3a84-937f-515b-9004-b801ea3e6cce
+
+	measure Customers = COUNTROWS(dim_customer)
+		formatString: #,0
+		displayFolder: Segmentation
+		lineageTag: 09d66ad8-b3fe-5451-95ef-6169c05d0309
+
+	measure 'Avg Historical CLV' = AVERAGE(dim_customer[historical_clv])
+		formatString: $#,0
+		displayFolder: Segmentation
+		lineageTag: c9dc1a32-8a77-5d39-b883-5f376678c50e
+
+	measure 'Predicted CLV 12m' = SUM(dim_customer[predicted_clv_12m])
+		formatString: $#,0
+		displayFolder: Segmentation
+		lineageTag: 98637d82-5bfd-5105-a35c-a84c6458c4bb
+
+	measure 'Avg Recency (days)' = AVERAGE(dim_customer[recency_days])
+		formatString: #,0
+		displayFolder: Segmentation
+		lineageTag: 63fb21f5-5046-5737-acb5-17c07fb34e74
+
+	measure 'Avg Spend' = AVERAGE(dim_customer[monetary])
+		formatString: $#,0
+		displayFolder: Segmentation
+		lineageTag: f2652ada-ba3d-59d6-add1-e0f6f9004e06
+
+	measure 'Customer Share' = DIVIDE([Customers], CALCULATE([Customers], REMOVEFILTERS(dim_customer[persona])))
+		formatString: 0.0%
+		displayFolder: Segmentation
+		lineageTag: 40cd260b-c9c9-530f-b6fa-33b66a8ad959
+
+	column customer_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 63b342ec-b2d3-5de0-98af-ed5b2a628cd9
+		summarizeBy: none
+		sourceColumn: customer_id
+
+	column signup_date
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: 0909e481-f67c-5ba9-a926-94953f6d4358
+		summarizeBy: none
+		sourceColumn: signup_date
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column country_code
+		dataType: string
+		lineageTag: 26fa5dc5-de1c-59eb-8c69-64d530567ffd
+		summarizeBy: none
+		sourceColumn: country_code
+
+	column age_band
+		dataType: string
+		lineageTag: 08b613e9-fc67-5f97-9760-0b60bb55cb19
+		summarizeBy: none
+		sourceColumn: age_band
+
+	column gender
+		dataType: string
+		lineageTag: aeb89e2d-8b11-5837-b54d-2cf956c9c88a
+		summarizeBy: none
+		sourceColumn: gender
+
+	column acquisition_channel
+		dataType: string
+		lineageTag: 6a7d4a7f-2457-5d0f-bc76-225c10a12f60
+		summarizeBy: none
+		sourceColumn: acquisition_channel
+
+	column preferred_device
+		dataType: string
+		lineageTag: f72ab167-d7c8-5025-9908-1f46cd01b1ba
+		summarizeBy: none
+		sourceColumn: preferred_device
+
+	column is_loyalty_member
+		dataType: boolean
+		lineageTag: 55e11103-42f0-539e-97a6-f74993e31631
+		summarizeBy: none
+		sourceColumn: is_loyalty_member
+
+	column marketing_opt_in
+		dataType: boolean
+		lineageTag: d806ca31-1dc2-5486-ac91-d82cc7cb8b1d
+		summarizeBy: none
+		sourceColumn: marketing_opt_in
+
+	column recency_days
+		dataType: double
+		lineageTag: f1cc200e-17ce-5453-a5f6-bdb054594536
+		summarizeBy: none
+		sourceColumn: recency_days
+
+	column frequency
+		dataType: double
+		lineageTag: 4d26a6bb-b751-56b1-8fed-22e61c805fab
+		summarizeBy: none
+		sourceColumn: frequency
+
+	column monetary
+		dataType: double
+		formatString: $#,0.00
+		lineageTag: 6a8478ac-489a-51c5-b942-c99bf28a2119
+		summarizeBy: sum
+		sourceColumn: monetary
+
+	column r_score
+		dataType: double
+		formatString: 0
+		lineageTag: 82446fdb-88b1-59a6-a925-aec0f66928dd
+		summarizeBy: none
+		sourceColumn: r_score
+
+	column f_score
+		dataType: double
+		formatString: 0
+		lineageTag: 8f6122aa-c2c2-5fb4-918d-23bd29179246
+		summarizeBy: none
+		sourceColumn: f_score
+
+	column m_score
+		dataType: double
+		formatString: 0
+		lineageTag: 6e4176c4-8cc4-5929-a876-2bbe06613add
+		summarizeBy: none
+		sourceColumn: m_score
+
+	column rfm_code
+		dataType: string
+		lineageTag: f8b6bb87-380f-5536-8ede-f3f614c098eb
+		summarizeBy: none
+		sourceColumn: rfm_code
+
+	column rfm_segment
+		dataType: string
+		lineageTag: b5db27c4-efcb-5f98-98a2-0ab63109c785
+		summarizeBy: none
+		sourceColumn: rfm_segment
+
+	column p_alive
+		dataType: double
+		formatString: 0.0%
+		lineageTag: c8760d74-06af-5c0b-9213-5ae9eb48f0ae
+		summarizeBy: none
+		sourceColumn: p_alive
+
+	column historical_clv
+		dataType: double
+		formatString: $#,0.00
+		lineageTag: 44f3f184-4b09-5877-8e95-eaaf92852e0d
+		summarizeBy: sum
+		sourceColumn: historical_clv
+
+	column predicted_clv_12m
+		dataType: double
+		formatString: $#,0.00
+		lineageTag: 30374275-72a7-59e7-8e67-814ef2f0201f
+		summarizeBy: sum
+		sourceColumn: predicted_clv_12m
+
+	column persona
+		dataType: string
+		lineageTag: c12fbfea-60d0-530e-b8d2-02602f4c077b
+		summarizeBy: none
+		sourceColumn: persona
+
+	column signup_month
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: 1b5ec57f-d265-5708-b6e6-60ba49c40d4c
+		summarizeBy: none
+		sourceColumn: signup_month
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column cohort_month
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: af4dccc4-f688-50bf-b616-f53255a67cb4
+		summarizeBy: none
+		sourceColumn: cohort_month
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column clv_band
+		dataType: string
+		lineageTag: 3f282b1b-c516-596d-89a8-f5ead6349b29
+		summarizeBy: none
+		sourceColumn: clv_band
+		sortByColumn: clv_band_order
+
+	column clv_band_order
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: b61ac20a-365e-5a8f-a553-42ee168fe4c0
+		summarizeBy: none
+		sourceColumn: clv_band_order
+
+	partition dim_customer = m
+		mode: import
+		source =
+				let
+				    Source = Parquet.Document(File.Contents(DataFolder & "dim_customer.parquet")),
+				    Typed = Table.TransformColumnTypes(Source, {{"customer_id", Int64.Type}, {"signup_date", type date}, {"country_code", type text}, {"age_band", type text}, {"gender", type text}, {"acquisition_channel", type text}, {"preferred_device", type text}, {"is_loyalty_member", type logical}, {"marketing_opt_in", type logical}, {"recency_days", type number}, {"frequency", type number}, {"monetary", type number}, {"r_score", type number}, {"f_score", type number}, {"m_score", type number}, {"rfm_code", type text}, {"rfm_segment", type text}, {"p_alive", type number}, {"historical_clv", type number}, {"predicted_clv_12m", type number}, {"persona", type text}, {"signup_month", type date}, {"cohort_month", type date}, {"clv_band", type text}, {"clv_band_order", Int64.Type}})
+				in
+				    Typed
+

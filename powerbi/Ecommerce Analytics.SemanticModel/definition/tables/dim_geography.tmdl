@@ -1,0 +1,44 @@
+table dim_geography
+	lineageTag: 3df88a05-2c53-5913-b6d5-43092e275036
+
+	column country_code
+		dataType: string
+		lineageTag: 618f55eb-762a-5267-8f82-87ae0dcf3afb
+		summarizeBy: none
+		sourceColumn: country_code
+
+	column country
+		dataType: string
+		lineageTag: 64bce6a8-c5bf-530f-ba0d-22a5621f969d
+		dataCategory: Country
+		summarizeBy: none
+		sourceColumn: country
+
+	column region
+		dataType: string
+		lineageTag: 029c2440-c3aa-54e3-9d1f-4fab6ca178c5
+		summarizeBy: none
+		sourceColumn: region
+
+	column currency
+		dataType: string
+		lineageTag: 91bc4ef3-5533-5ae3-93ed-14a664f858a2
+		summarizeBy: none
+		sourceColumn: currency
+
+	column price_index
+		dataType: double
+		formatString: 0.00
+		lineageTag: cc39c0bc-3f43-5342-8548-960f27216162
+		summarizeBy: none
+		sourceColumn: price_index
+
+	partition dim_geography = m
+		mode: import
+		source =
+				let
+				    Source = Parquet.Document(File.Contents(DataFolder & "dim_geography.parquet")),
+				    Typed = Table.TransformColumnTypes(Source, {{"country_code", type text}, {"country", type text}, {"region", type text}, {"currency", type text}, {"price_index", type number}})
+				in
+				    Typed
+

@@ -1,0 +1,211 @@
+table fact_order_lines
+	lineageTag: 46ed3f59-d871-5171-871f-e01d5b95d710
+
+	measure Revenue = CALCULATE(SUM(fact_order_lines[line_revenue]), fact_order_lines[order_status] = "completed")
+		formatString: $#,0
+		displayFolder: Sales
+		lineageTag: 7fbf5993-c2a8-5747-aa83-8f504d91e69c
+
+	measure 'Gross Profit' = CALCULATE(SUM(fact_order_lines[line_revenue]) - SUM(fact_order_lines[line_cogs]), fact_order_lines[order_status] = "completed")
+		formatString: $#,0
+		displayFolder: Sales
+		lineageTag: 5e863ea8-ba3b-5a0d-96de-b62f895d4fbd
+
+	measure 'Gross Margin %' = DIVIDE([Gross Profit], [Revenue])
+		formatString: 0.0%
+		displayFolder: Sales
+		lineageTag: fbd83309-8255-57e5-8464-8893b3252641
+
+	measure Orders = CALCULATE(DISTINCTCOUNT(fact_order_lines[order_id]), fact_order_lines[order_status] = "completed")
+		formatString: #,0
+		displayFolder: Sales
+		lineageTag: ab436b37-8a39-5364-810c-9380d21eeed5
+
+	measure Units = CALCULATE(SUM(fact_order_lines[quantity]), fact_order_lines[order_status] = "completed")
+		formatString: #,0
+		displayFolder: Sales
+		lineageTag: 62986e3e-809a-50d1-8a97-6bd323acdaca
+
+	measure AOV = DIVIDE([Revenue], [Orders])
+		formatString: $#,0.00
+		displayFolder: Sales
+		lineageTag: a99ebaec-49a7-508d-8290-e4440e4e6e12
+
+	measure 'Active Customers' = CALCULATE(DISTINCTCOUNT(fact_order_lines[customer_id]), fact_order_lines[order_status] = "completed")
+		formatString: #,0
+		displayFolder: Customers
+		lineageTag: 7a92e745-79c2-5d0d-8829-d897429b843f
+
+	measure 'Repeat Customer Rate' = VAR c = ADDCOLUMNS(VALUES(fact_order_lines[customer_id]), "@o", [Orders]) RETURN DIVIDE(COUNTROWS(FILTER(c, [@o] > 1)), COUNTROWS(FILTER(c, [@o] >= 1)))
+		formatString: 0.0%
+		displayFolder: Customers
+		lineageTag: 9c636f18-0378-5443-a97b-de647bce8626
+
+	measure 'Revenue PY' = CALCULATE([Revenue], SAMEPERIODLASTYEAR(dim_date[date]))
+		formatString: $#,0
+		displayFolder: Time intelligence
+		lineageTag: b1aee090-8e44-52e3-b2e7-71f7c0461b5c
+
+	measure 'Revenue YoY %' = DIVIDE([Revenue] - [Revenue PY], [Revenue PY])
+		formatString: +0.0%;-0.0%;0.0%
+		displayFolder: Time intelligence
+		lineageTag: fc74df6f-bed7-59a3-89ab-57c8a8909467
+
+	measure 'Revenue 3M Avg' = DIVIDE(CALCULATE([Revenue], DATESINPERIOD(dim_date[date], MAX(dim_date[date]), -3, MONTH)), 3)
+		formatString: $#,0
+		displayFolder: Time intelligence
+		lineageTag: 4abbc3d5-ca5a-539b-958d-2ac1f8f4d784
+
+	measure 'Revenue YTD' = TOTALYTD([Revenue], dim_date[date])
+		formatString: $#,0
+		displayFolder: Time intelligence
+		lineageTag: c9b65653-05af-50ed-b530-afa2f7e6cc45
+
+	measure 'Revenue Growth L12M' = VAR d = MAX(dim_date[date]) VAR cur = CALCULATE([Revenue], DATESINPERIOD(dim_date[date], d, -12, MONTH)) VAR prev = CALCULATE([Revenue], DATESINPERIOD(dim_date[date], EDATE(d, -12), -12, MONTH)) RETURN DIVIDE(cur - prev, prev)
+		formatString: +0.0%;-0.0%;0.0%
+		displayFolder: Time intelligence
+		lineageTag: 92700aff-335b-5e65-bd6a-5d299492f2da
+
+	measure 'Discount %' = DIVIDE(CALCULATE(SUM(fact_order_lines[discount_amount]), fact_order_lines[order_status] = "completed"), CALCULATE(SUM(fact_order_lines[gross_amount]), fact_order_lines[order_status] = "completed"))
+		formatString: 0.0%
+		displayFolder: Sales
+		lineageTag: 429d527e-3fbf-526b-aa05-b4b1a89c7f41
+
+	measure 'Return Rate %' = DIVIDE(CALCULATE(DISTINCTCOUNT(fact_order_lines[order_id]), fact_order_lines[order_status] = "returned"), DISTINCTCOUNT(fact_order_lines[order_id]))
+		formatString: 0.0%
+		displayFolder: Operations
+		lineageTag: 7e2f9385-21a9-5047-a290-00dd9d4020a2
+
+	measure 'Cancellation Rate %' = DIVIDE(CALCULATE(DISTINCTCOUNT(fact_order_lines[order_id]), fact_order_lines[order_status] = "cancelled"), DISTINCTCOUNT(fact_order_lines[order_id]))
+		formatString: 0.0%
+		displayFolder: Operations
+		lineageTag: 1b4c40c3-5414-55b0-97d8-0201c518307d
+
+	measure 'Revenue Share' = DIVIDE([Revenue], CALCULATE([Revenue], REMOVEFILTERS(dim_customer[persona])))
+		formatString: 0.0%
+		displayFolder: Customers
+		lineageTag: 9e2b282b-7399-528a-a2be-9de3be5bfed0
+
+	column order_item_id
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 83a40301-c3a7-5f7b-96e9-41aebc6bca9d
+		summarizeBy: none
+		sourceColumn: order_item_id
+
+	column order_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 3f27c54c-c4b8-5810-8084-06484f8b6aa0
+		summarizeBy: none
+		sourceColumn: order_id
+
+	column order_date
+		dataType: dateTime
+		isHidden
+		formatString: yyyy-mm-dd
+		lineageTag: 3b8ece1f-95ed-5dad-8f8e-654ae7292c68
+		summarizeBy: none
+		sourceColumn: order_date
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column customer_id
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 67dff88e-f0c6-59db-858b-5b9b9fa407c1
+		summarizeBy: none
+		sourceColumn: customer_id
+
+	column product_id
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: cd3537ad-c687-544a-b1c9-b42307020c12
+		summarizeBy: none
+		sourceColumn: product_id
+
+	column country_code
+		dataType: string
+		isHidden
+		lineageTag: 9cfd7d3d-0b67-509c-93b4-31da444e40aa
+		summarizeBy: none
+		sourceColumn: country_code
+
+	column device
+		dataType: string
+		lineageTag: 5ae0eebf-4770-5a37-8b5f-3144d15c7c3d
+		summarizeBy: none
+		sourceColumn: device
+
+	column payment_method
+		dataType: string
+		lineageTag: 17395c08-b508-543f-bd0e-546ccd4dfa57
+		summarizeBy: none
+		sourceColumn: payment_method
+
+	column order_status
+		dataType: string
+		lineageTag: cde0104e-f792-5ab4-8e80-ca3a3a389e8f
+		summarizeBy: none
+		sourceColumn: order_status
+
+	column is_first_order
+		dataType: boolean
+		lineageTag: dbaf9ebb-0875-5771-bd9b-45c4d867e28d
+		summarizeBy: none
+		sourceColumn: is_first_order
+
+	column quantity
+		dataType: int64
+		formatString: 0
+		lineageTag: 49e2b0ae-edea-5b4f-a60a-c74db0e26024
+		summarizeBy: sum
+		sourceColumn: quantity
+
+	column unit_price
+		dataType: double
+		formatString: $#,0.00
+		lineageTag: 171f996f-b2a1-5d03-b6e8-80c6bea4a317
+		summarizeBy: none
+		sourceColumn: unit_price
+
+	column gross_amount
+		dataType: double
+		formatString: $#,0.00
+		lineageTag: bf58cf86-92e1-5bc9-9a0c-d6fa9b76fc04
+		summarizeBy: sum
+		sourceColumn: gross_amount
+
+	column discount_amount
+		dataType: double
+		formatString: $#,0.00
+		lineageTag: ee701d15-8f1e-51e9-89a1-5dcae25883d1
+		summarizeBy: sum
+		sourceColumn: discount_amount
+
+	column line_revenue
+		dataType: double
+		formatString: $#,0.00
+		lineageTag: 912f34a9-fe36-5d42-ba44-785e2152bfe4
+		summarizeBy: sum
+		sourceColumn: line_revenue
+
+	column line_cogs
+		dataType: double
+		formatString: $#,0.00
+		lineageTag: 920695d0-185d-58fc-948e-8b304e97f590
+		summarizeBy: sum
+		sourceColumn: line_cogs
+
+	partition fact_order_lines = m
+		mode: import
+		source =
+				let
+				    Source = Parquet.Document(File.Contents(DataFolder & "fact_order_lines.parquet")),
+				    Typed = Table.TransformColumnTypes(Source, {{"order_item_id", Int64.Type}, {"order_id", Int64.Type}, {"order_date", type date}, {"customer_id", Int64.Type}, {"product_id", Int64.Type}, {"country_code", type text}, {"device", type text}, {"payment_method", type text}, {"order_status", type text}, {"is_first_order", type logical}, {"quantity", Int64.Type}, {"unit_price", type number}, {"gross_amount", type number}, {"discount_amount", type number}, {"line_revenue", type number}, {"line_cogs", type number}})
+				in
+				    Typed
+

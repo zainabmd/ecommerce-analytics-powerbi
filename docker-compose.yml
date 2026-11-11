@@ -1,0 +1,27 @@
+# Local PostgreSQL 16 for the warehouse mode of the pipeline.
+#   docker compose up -d postgres
+#   DATABASE_URL=postgresql+psycopg2://ecom:ecom@localhost:5432/ecommerce python run_pipeline.py
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: ecom-postgres
+    environment:
+      POSTGRES_USER: ecom
+      POSTGRES_PASSWORD: ecom          # local dev only – use a secret manager elsewhere
+      POSTGRES_DB: ecommerce
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    command: >
+      postgres -c shared_buffers=512MB -c work_mem=64MB -c maintenance_work_mem=512MB
+               -c max_wal_size=4GB -c checkpoint_timeout=15min
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ecom -d ecommerce"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+
+volumes:
+  pgdata:

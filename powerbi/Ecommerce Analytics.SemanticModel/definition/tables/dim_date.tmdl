@@ -1,0 +1,99 @@
+table dim_date
+	lineageTag: feb6989c-2e1f-59bf-9bbb-05397e1d5113
+	dataCategory: Time
+
+	column date
+		dataType: dateTime
+		isKey
+		formatString: yyyy-mm-dd
+		lineageTag: fcf4043e-9cee-57e8-b170-8ab00c661f75
+		summarizeBy: none
+		sourceColumn: date
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column year
+		dataType: int64
+		formatString: 0
+		lineageTag: a4cf438a-2479-5608-aced-4ec82f9117ad
+		summarizeBy: none
+		sourceColumn: year
+
+	column quarter
+		dataType: string
+		lineageTag: e6440d8d-d133-590f-bd1a-7f4fd8bb99a0
+		summarizeBy: none
+		sourceColumn: quarter
+
+	column year_quarter
+		dataType: string
+		lineageTag: bcb560aa-ba6b-59d6-b962-77dc4a5ca59a
+		summarizeBy: none
+		sourceColumn: year_quarter
+
+	column month_number
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 29ab36e2-739d-5257-bed4-9b813486e453
+		summarizeBy: none
+		sourceColumn: month_number
+
+	column month_name
+		dataType: string
+		lineageTag: d6f45196-9e21-5b62-a2f5-16280db5b270
+		summarizeBy: none
+		sourceColumn: month_name
+		sortByColumn: month_number
+
+	column month_start
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: 4651273f-d618-5562-928a-2021214c5b21
+		summarizeBy: none
+		sourceColumn: month_start
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column year_month
+		dataType: string
+		lineageTag: 95573523-94d5-577d-9bf8-3e71dd2215a3
+		summarizeBy: none
+		sourceColumn: year_month
+
+	column weekday_number
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 7e03c0b1-7816-5529-bdff-0438a40de853
+		summarizeBy: none
+		sourceColumn: weekday_number
+
+	column weekday
+		dataType: string
+		lineageTag: 6170302c-902e-5218-908c-5dae322ec2df
+		summarizeBy: none
+		sourceColumn: weekday
+		sortByColumn: weekday_number
+
+	column is_weekend
+		dataType: boolean
+		lineageTag: 8a0d9faa-9ee5-5c1c-9b2e-740fc794c21f
+		summarizeBy: none
+		sourceColumn: is_weekend
+
+	column is_holiday_season
+		dataType: boolean
+		lineageTag: 614e6269-baec-51f7-ac0c-e985c7cf8ece
+		summarizeBy: none
+		sourceColumn: is_holiday_season
+
+	partition dim_date = m
+		mode: import
+		source =
+				let
+				    Source = Parquet.Document(File.Contents(DataFolder & "dim_date.parquet")),
+				    Typed = Table.TransformColumnTypes(Source, {{"date", type date}, {"year", Int64.Type}, {"quarter", type text}, {"year_quarter", type text}, {"month_number", Int64.Type}, {"month_name", type text}, {"month_start", type date}, {"year_month", type text}, {"weekday_number", Int64.Type}, {"weekday", type text}, {"is_weekend", type logical}, {"is_holiday_season", type logical}})
+				in
+				    Typed
+

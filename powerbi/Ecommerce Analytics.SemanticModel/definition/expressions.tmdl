@@ -1,0 +1,5 @@
+expression DataFolder = "E:\Claude\project1_ecommerce_analytics\powerbi\data\" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+	lineageTag: 993c87b9-3a27-55f1-99b0-963d8f7fbff0
+
+	annotation PBI_ResultType = Text
+

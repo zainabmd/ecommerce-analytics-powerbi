@@ -1,0 +1,109 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.14.0/schema.json",
+  "name": "fun_source",
+  "position": {
+    "x": 536,
+    "y": 188,
+    "z": 8000,
+    "height": 270,
+    "width": 360,
+    "tabOrder": 8000
+  },
+  "visual": {
+    "visualType": "clusteredBarChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_web_funnel"
+                    }
+                  },
+                  "Property": "traffic_source"
+                }
+              },
+              "queryRef": "fact_web_funnel.traffic_source",
+              "nativeQueryRef": "traffic_source",
+              "active": true,
+              "displayName": "Traffic source"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_web_funnel"
+                    }
+                  },
+                  "Property": "Conversion Rate"
+                }
+              },
+              "queryRef": "fact_web_funnel.Conversion Rate",
+              "nativeQueryRef": "Conversion Rate"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "fact_web_funnel"
+                  }
+                },
+                "Property": "Conversion Rate"
+              }
+            },
+            "direction": "Descending"
+          }
+        ]
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Conversion rate by traffic source'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "dropShadow": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

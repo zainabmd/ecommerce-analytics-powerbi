@@ -1,0 +1,33 @@
+{
+  "name": "E-Commerce Analytics 2023",
+  "dataColors": ["#2A78D6", "#EB6834", "#1BAF7A", "#EDA100", "#E87BA4", "#008300", "#6250D6", "#E34948"],
+  "background": "#FFFFFF",
+  "foreground": "#0B2545",
+  "tableAccent": "#2A78D6",
+  "good": "#0CA30C",
+  "neutral": "#FAB219",
+  "bad": "#D03B3B",
+  "maximum": "#184F95",
+  "center": "#6DA7EC",
+  "minimum": "#EAF2FC",
+  "textClasses": {
+    "title": {"fontFace": "Segoe UI Semibold", "fontSize": 11, "color": "#0B2545"},
+    "label": {"fontFace": "Segoe UI", "fontSize": 9, "color": "#5B6474"},
+    "callout": {"fontFace": "Segoe UI Semibold", "fontSize": 22, "color": "#0B2545"},
+    "header": {"fontFace": "Segoe UI Semibold", "fontSize": 12, "color": "#0B2545"}
+  },
+  "visualStyles": {
+    "*": {
+      "*": {
+        "background": [{"show": true, "color": {"solid": {"color": "#FFFFFF"}}, "transparency": 0}],
+        "border": [{"show": true, "color": {"solid": {"color": "#E3E7EE"}}, "radius": 10}],
+        "padding": [{"top": 8, "bottom": 8, "left": 10, "right": 10}],
+        "title": [{"show": true, "fontColor": {"solid": {"color": "#0B2545"}}, "fontSize": 11, "fontFamily": "Segoe UI Semibold"}],
+        "valueAxis": [{"gridlineColor": {"solid": {"color": "#EEF1F5"}}, "gridlineThickness": 1}],
+        "categoryAxis": [{"gridlineShow": false}]
+      }
+    },
+    "page": {"*": {"background": [{"color": {"solid": {"color": "#F5F7FA"}}, "transparency": 0}]}},
+    "slicer": {"*": {"background": [{"show": true, "color": {"solid": {"color": "#FFFFFF"}}}]}}
+  }
+}

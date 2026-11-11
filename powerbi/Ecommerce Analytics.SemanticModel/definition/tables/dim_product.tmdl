@@ -1,0 +1,71 @@
+table dim_product
+	lineageTag: ce0c2f8b-ea15-5f07-83d7-7e7a73707f53
+
+	column product_id
+		dataType: int64
+		formatString: 0
+		lineageTag: fbe33c7b-6475-5eaf-8004-5284b033cfa3
+		summarizeBy: none
+		sourceColumn: product_id
+
+	column sku
+		dataType: string
+		lineageTag: e9c0e62f-d9bb-574c-a1d8-140911a5abd9
+		summarizeBy: none
+		sourceColumn: sku
+
+	column product_name
+		dataType: string
+		lineageTag: 28b00b29-2a56-5c1a-add6-d3d4cc5cb8ed
+		summarizeBy: none
+		sourceColumn: product_name
+
+	column category
+		dataType: string
+		lineageTag: 6ad318b5-dc89-5e5e-8d1b-dde1500ab012
+		summarizeBy: none
+		sourceColumn: category
+
+	column subcategory
+		dataType: string
+		lineageTag: 41302020-b056-58a1-9fce-635f866ca0e2
+		summarizeBy: none
+		sourceColumn: subcategory
+
+	column brand
+		dataType: string
+		lineageTag: 099f083f-8249-55a6-9155-118f621d7b1a
+		summarizeBy: none
+		sourceColumn: brand
+
+	column list_price
+		dataType: double
+		formatString: $#,0.00
+		lineageTag: bcab3bc2-517a-51d3-b454-893716905ed2
+		summarizeBy: none
+		sourceColumn: list_price
+
+	column launch_date
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: 8bf5563c-baa5-548c-8e1a-f83fbcbe4e6e
+		summarizeBy: none
+		sourceColumn: launch_date
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column is_active
+		dataType: boolean
+		lineageTag: b59e0de3-7b72-56ba-b0ef-cbfd8fe0352e
+		summarizeBy: none
+		sourceColumn: is_active
+
+	partition dim_product = m
+		mode: import
+		source =
+				let
+				    Source = Parquet.Document(File.Contents(DataFolder & "dim_product.parquet")),
+				    Typed = Table.TransformColumnTypes(Source, {{"product_id", Int64.Type}, {"sku", type text}, {"product_name", type text}, {"category", type text}, {"subcategory", type text}, {"brand", type text}, {"list_price", type number}, {"launch_date", type date}, {"is_active", type logical}})
+				in
+				    Typed
+

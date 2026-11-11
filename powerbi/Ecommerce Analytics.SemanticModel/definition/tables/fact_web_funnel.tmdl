@@ -1,0 +1,101 @@
+table fact_web_funnel
+	lineageTag: 4fec4bae-0dac-56f7-8719-8a07a7b59061
+
+	measure 'Web Sessions' = SUM(fact_web_funnel[sessions])
+		formatString: #,0
+		displayFolder: Funnel
+		lineageTag: f7258955-eb8b-5d0a-8be9-3b116f018ffe
+
+	measure 'Web Purchases' = SUM(fact_web_funnel[purchases])
+		formatString: #,0
+		displayFolder: Funnel
+		lineageTag: b1a4f9aa-3ba3-5f80-bcde-4488433cd8e1
+
+	measure 'Conversion Rate' = DIVIDE([Web Purchases], [Web Sessions])
+		formatString: 0.00%
+		displayFolder: Funnel
+		lineageTag: ec766502-280f-532e-992d-ad7c881fe975
+
+	measure 'Bounce Rate' = 1 - DIVIDE(SUM(fact_web_funnel[engaged]), [Web Sessions])
+		formatString: 0.0%
+		displayFolder: Funnel
+		lineageTag: 215c6c03-167d-5d9d-b96d-a7a2c05f85ca
+
+	measure 'Funnel Value' = SWITCH(SELECTEDVALUE('Funnel Stage'[Step]), 1, [Web Sessions], 2, SUM(fact_web_funnel[engaged]), 3, SUM(fact_web_funnel[carts]), 4, SUM(fact_web_funnel[checkouts]), 5, [Web Purchases])
+		formatString: #,0
+		displayFolder: Funnel
+		lineageTag: 05fcdde2-1deb-56c3-a2b1-4516764af359
+
+	column date
+		dataType: dateTime
+		isHidden
+		formatString: yyyy-mm-dd
+		lineageTag: e2dddd52-0412-5f19-88d4-06dbd3d8050b
+		summarizeBy: none
+		sourceColumn: date
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column country_code
+		dataType: string
+		isHidden
+		lineageTag: baeeef8f-4d6d-5aa8-97ae-0d02e564792c
+		summarizeBy: none
+		sourceColumn: country_code
+
+	column device
+		dataType: string
+		lineageTag: 85f911db-ad58-515b-921e-474cb255f9c5
+		summarizeBy: none
+		sourceColumn: device
+
+	column traffic_source
+		dataType: string
+		lineageTag: 676a1877-c13e-5728-875b-697b123d4229
+		summarizeBy: none
+		sourceColumn: traffic_source
+
+	column sessions
+		dataType: int64
+		formatString: 0
+		lineageTag: 8266113b-6771-5d96-be2e-702b1b67a830
+		summarizeBy: sum
+		sourceColumn: sessions
+
+	column engaged
+		dataType: int64
+		formatString: 0
+		lineageTag: 85818edc-7cdb-55d9-9425-d3533711fa11
+		summarizeBy: sum
+		sourceColumn: engaged
+
+	column carts
+		dataType: int64
+		formatString: 0
+		lineageTag: b022fa70-cfe6-5435-8569-4885cbb37b09
+		summarizeBy: sum
+		sourceColumn: carts
+
+	column checkouts
+		dataType: int64
+		formatString: 0
+		lineageTag: 6187db29-39be-5869-a528-1f9e173b73e0
+		summarizeBy: sum
+		sourceColumn: checkouts
+
+	column purchases
+		dataType: int64
+		formatString: 0
+		lineageTag: c00fe4be-6801-515a-99d8-9efe33288158
+		summarizeBy: sum
+		sourceColumn: purchases
+
+	partition fact_web_funnel = m
+		mode: import
+		source =
+				let
+				    Source = Parquet.Document(File.Contents(DataFolder & "fact_web_funnel.parquet")),
+				    Typed = Table.TransformColumnTypes(Source, {{"date", type date}, {"country_code", type text}, {"device", type text}, {"traffic_source", type text}, {"sessions", Int64.Type}, {"engaged", Int64.Type}, {"carts", Int64.Type}, {"checkouts", Int64.Type}, {"purchases", Int64.Type}})
+				in
+				    Typed
+

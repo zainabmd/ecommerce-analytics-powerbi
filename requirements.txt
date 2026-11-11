@@ -1,0 +1,17 @@
+# Core data stack
+pandas>=2.1
+numpy>=1.26
+pyarrow>=14.0
+scikit-learn>=1.4
+joblib>=1.3
+
+# Warehouse
+SQLAlchemy>=2.0
+psycopg2-binary>=2.9
+
+# Visualisation & dashboard
+matplotlib>=3.8
+seaborn>=0.13
+
+# Dev
+pytest>=8.0

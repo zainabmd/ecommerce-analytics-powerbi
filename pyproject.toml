@@ -1,0 +1,18 @@
+[project]
+name = "ecommerce-analytics"
+version = "1.0.0"
+description = "Modern e-commerce analytics: synthetic data, PostgreSQL warehouse, RFM + K-Means segmentation, Power BI report (PBIP)."
+requires-python = ">=3.10"
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+addopts = "-q"
+filterwarnings = ["ignore::DeprecationWarning"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]

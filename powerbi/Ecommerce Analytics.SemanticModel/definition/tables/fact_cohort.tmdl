@@ -1,0 +1,70 @@
+table fact_cohort
+	lineageTag: f35edece-17d3-578f-987c-70fac9d0ea29
+
+	measure 'Cohort Customers' = SUM(fact_cohort[active_customers])
+		formatString: #,0
+		displayFolder: Cohorts
+		lineageTag: b26eb365-f531-5051-84eb-d64338a7c035
+
+	measure 'Cohort Size' = CALCULATE(SUM(fact_cohort[active_customers]), fact_cohort[months_since_first] = 0, REMOVEFILTERS(fact_cohort[months_since_first]))
+		formatString: #,0
+		displayFolder: Cohorts
+		lineageTag: fc4a45e2-0af0-5d8b-95a4-0224d46a8146
+
+	measure 'Retention %' = DIVIDE([Cohort Customers], [Cohort Size])
+		formatString: 0.0%
+		displayFolder: Cohorts
+		lineageTag: 9f35842a-5e6f-5d07-8a44-97dff5af3b4f
+
+	column months_since_first
+		dataType: int64
+		formatString: 0
+		lineageTag: 0d0f84f5-9f15-52eb-a76e-f16be8c8ebad
+		summarizeBy: none
+		sourceColumn: months_since_first
+
+	column country_code
+		dataType: string
+		isHidden
+		lineageTag: fea66693-7333-53c8-b912-6e617d084aaa
+		summarizeBy: none
+		sourceColumn: country_code
+
+	column acquisition_channel
+		dataType: string
+		lineageTag: 5908c18f-d916-507a-b23c-f0c2bef7fe4a
+		summarizeBy: none
+		sourceColumn: acquisition_channel
+
+	column active_customers
+		dataType: int64
+		formatString: 0
+		lineageTag: e5c5ee7f-1b54-572f-be90-ccdd304a27bb
+		summarizeBy: sum
+		sourceColumn: active_customers
+
+	column revenue
+		dataType: double
+		formatString: $#,0
+		lineageTag: 122b6696-ce0a-5e6b-872f-39251439da49
+		summarizeBy: sum
+		sourceColumn: revenue
+
+	column cohort_month
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: ddad271a-6a4b-536b-bfb8-5ebaf1f63fa6
+		summarizeBy: none
+		sourceColumn: cohort_month
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	partition fact_cohort = m
+		mode: import
+		source =
+				let
+				    Source = Parquet.Document(File.Contents(DataFolder & "fact_cohort.parquet")),
+				    Typed = Table.TransformColumnTypes(Source, {{"months_since_first", Int64.Type}, {"country_code", type text}, {"acquisition_channel", type text}, {"active_customers", Int64.Type}, {"revenue", type number}, {"cohort_month", type date}})
+				in
+				    Typed
+

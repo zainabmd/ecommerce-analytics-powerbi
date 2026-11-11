@@ -1,0 +1,32 @@
+relationship 5175b683-23d6-566c-a449-eaa7fd7abd40
+	fromColumn: fact_order_lines.order_date
+	toColumn: dim_date.date
+
+relationship c1f44bc1-5c29-5c7f-bb25-f15bee62c029
+	fromColumn: fact_order_lines.customer_id
+	toColumn: dim_customer.customer_id
+
+relationship 3b71ec51-4f16-5087-90bc-abeddca34e29
+	fromColumn: fact_order_lines.product_id
+	toColumn: dim_product.product_id
+
+relationship ac0bdd52-66d2-5099-9368-c882b44c3b2a
+	fromColumn: fact_order_lines.country_code
+	toColumn: dim_geography.country_code
+
+relationship 491bc360-173b-5107-b0af-e76ba39050e2
+	fromColumn: fact_web_funnel.date
+	toColumn: dim_date.date
+
+relationship dc8ec7c7-6899-58d0-8f29-cfe5cf798df4
+	fromColumn: fact_web_funnel.country_code
+	toColumn: dim_geography.country_code
+
+relationship f4ff5e2d-8f02-54a5-af67-d86cfa0990cf
+	fromColumn: fact_cohort.cohort_month
+	toColumn: dim_date.date
+
+relationship 2fd116da-3d0e-5be4-a1f5-30d04b2c4b59
+	fromColumn: fact_cohort.country_code
+	toColumn: dim_geography.country_code
+
