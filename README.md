@@ -1,7 +1,5 @@
 # Global E-Commerce Analytics & Customer Segmentation
 
-> **Project 1 of 4 · 2023 · Upper-intermediate ★★★☆☆**
-
 An analytics project for a simulated online retailer. Python generates about 2.3M rows of sales and web data,
 RFM scores and K-Means group customers into segments, and a 5-page Power BI report shows the results.
 PostgreSQL is optional: everything also runs from local Parquet files.
@@ -90,7 +88,7 @@ Still, 80% of true whales land in VIP Champions and no one-time buyers do.
 
 ## Project structure
 ```
-project1_ecommerce_analytics/
+ecommerce-analytics-powerbi/
 ├── src/                 # generator, data checks, Postgres loader, segmentation, EDA, Power BI export
 ├── sql/                 # schema, indexes, analytics views
 ├── tests/               # pytest suite (20 tests)
